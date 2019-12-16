@@ -1,4 +1,7 @@
-const { injectBabelPlugin, getLoader } = require('react-app-rewired');
+const { getLoader } = require('react-app-rewired');
+const {
+    fixBabelImports
+} = require("customize-cra");
 
 const fileLoaderMatcher = function (rule) {
     return rule.loader && rule.loader.indexOf(`file-loader`) != -1;
@@ -6,7 +9,7 @@ const fileLoaderMatcher = function (rule) {
 
 module.exports = function override(config, env) {
     // babel-plugin-import
-    config = injectBabelPlugin(['import', {
+    config = fixBabelImports(['import', {
         libraryName: 'antd-mobile',
         //style: 'css',
         style: true, // use less for customized theme
