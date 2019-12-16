@@ -7,6 +7,7 @@ import {
     Button,
 
 } from 'antd-mobile'
+import Logo from 'components/logo/logo'
 
 const Item = List.Item;
 
@@ -19,6 +20,7 @@ class Rejister extends Component {
     render() {
         return (
             <div>
+                <Logo />
                 <List>
                     <InputItem
                         type="text"
