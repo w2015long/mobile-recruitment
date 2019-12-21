@@ -1,4 +1,6 @@
 import React, {Component} from 'react';
+import {connect} from 'react-redux'
+import {Redirect} from 'react-router-dom'
 import {
     NavBar,
     WingBlank,
@@ -6,8 +8,10 @@ import {
     List,
     InputItem,
     Button,
+    Toast
 } from 'antd-mobile'
 import Logo from 'components/logo/logo'
+import {login} from "../../redux/actions";
 
 const ListItem = List.Item;
 
@@ -20,18 +24,28 @@ class Login extends Component {
         }
     }
 
+
     handleChange = (type,val)=> {
         this.setState({
             [type]:val
         })
     }
 
-    register = () => {
-        console.log(this.state);
+    login = () => {
+        this.props.login(this.state);
+        setTimeout(()=>{
+            const {msg} = this.props.user;
+            if (msg) {
+                Toast.fail(msg);
+            }
+        },0)
     }
 
     render() {
-        const {select} = this.state
+        const {redirectTo} = this.props.user;
+        if (redirectTo) {
+            return <Redirect to={redirectTo} />
+        }
         return (
             <div style={{background:'#f1f1f1'}}>
                 <NavBar mode="dark">阿里直聘</NavBar>
@@ -53,7 +67,7 @@ class Login extends Component {
                         >密码</InputItem>
                     </List>
                     <WhiteSpace />
-                    <Button type='primary' onClick={this.register}>登&nbsp;陆</Button>
+                    <Button type='primary' onClick={this.login}>登&nbsp;陆</Button>
                     <WhiteSpace />
                     <Button type='ghost' onClick={()=>this.props.history.replace('/register')}>注&nbsp;册</Button>
                 </WingBlank>
@@ -62,4 +76,7 @@ class Login extends Component {
     }
 }
 
-export default Login;
+export default connect(
+    state => ({user:state.User}),
+    {login}
+)(Login);

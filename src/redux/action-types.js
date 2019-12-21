@@ -1,1 +1,2 @@
-export const SET_HEAD_TITLE = "set_head_title";
+export const AUTH_SUCCESS = "auth_success";
+export const ERROR_MSG = "error_msg";

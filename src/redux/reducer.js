@@ -1,17 +1,26 @@
 import {combineReducers} from 'redux';
 
 import {
-    SET_HEAD_TITLE,
+    AUTH_SUCCESS,
+    ERROR_MSG,
 
 } from "./action-types";
 
 
-const initHederTitle = '111'
+const initUser = {
+    username: '', // 用户名
+    type: '', // 用户类型 manito/boss
+    msg: '', // 错误提示信息
+    redirectTo: '' // 需要自动重定向的路由路径
+}
 
-function headTitle(state = initHederTitle,action) {
+function User(state = initUser,action) {
     switch (action.type) {
-        case SET_HEAD_TITLE:
-            return action.payload;
+        case AUTH_SUCCESS:
+            return {...state,...action.payload,redirectTo:'/'};
+            break;
+        case ERROR_MSG:
+            return {...state,msg:action.payload};
             break;
         default:
             return state
@@ -21,5 +30,5 @@ function headTitle(state = initHederTitle,action) {
 
 
 export default combineReducers({
-    headTitle,
+    User,
 })

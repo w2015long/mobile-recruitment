@@ -1,4 +1,6 @@
 import React, {Component} from 'react';
+import {connect} from 'react-redux'
+import {Redirect} from 'react-router-dom'
 import {
     NavBar,
     WingBlank,
@@ -6,13 +8,14 @@ import {
     List,
     InputItem,
     Button,
-    Radio
+    Radio,
+    Toast
 } from 'antd-mobile'
 import Logo from 'components/logo/logo'
+import {register} from '../../redux/actions';
 import './register.less'
 
 const ListItem = List.Item;
-const RadioItem = Radio.RadioItem;
 
 class Rejister extends Component {
     constructor(props) {
@@ -21,9 +24,11 @@ class Rejister extends Component {
             username:'',
             password:'',
             rePassword:'',
-            select:'boss',
+            type:'boss',
         }
     }
+
+
 
     handleChange = (type,val)=> {
         this.setState({
@@ -32,11 +37,21 @@ class Rejister extends Component {
     }
 
     register = () => {
-        console.log(this.state);
+        this.props.register(this.state);
+        setTimeout(()=>{
+            const {msg} = this.props.user;
+            if (msg) {
+                Toast.fail(msg);
+            }
+        },0)
     }
 
     render() {
-        const {select} = this.state
+        const {type} = this.state;
+        const {redirectTo} = this.props.user;
+        if (redirectTo) {
+            return <Redirect to={redirectTo} />
+        }
         return (
             <div style={{background:'#f1f1f1'}}>
                 <NavBar mode="dark">阿里直聘</NavBar>
@@ -65,8 +80,8 @@ class Rejister extends Component {
                     <WhiteSpace />
                     <ListItem className='flex-radio'>
                         <span>用户类型:</span>
-                        <Radio checked={select === 'boss'} onChange={val=>this.handleChange('select','boss')} >老板</Radio>
-                        <Radio checked={select === 'manito'} onChange={val=>this.handleChange('select','manito')}>大神</Radio>
+                        <Radio checked={type === 'boss'} onChange={val=>this.handleChange('type','boss')} >老板</Radio>
+                        <Radio checked={type === 'manito'} onChange={val=>this.handleChange('type','manito')}>大神</Radio>
                     </ListItem>
                     <WhiteSpace />
                     <Button type='primary' onClick={this.register}>注&nbsp;册</Button>
@@ -78,4 +93,8 @@ class Rejister extends Component {
     }
 }
 
-export default Rejister;
+
+export default connect(
+    state => ({user:state.User}),
+    {register}
+)(Rejister);

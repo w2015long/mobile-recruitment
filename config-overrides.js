@@ -7,7 +7,8 @@ module.exports = override(
         components: path.resolve(__dirname, 'src/components'),
         api: path.resolve(__dirname, 'src/api'),
         containers: path.resolve(__dirname, 'src/containers'),
-        assets: path.resolve(__dirname, 'src/assets')
+        assets: path.resolve(__dirname, 'src/assets'),
+        utils: path.resolve(__dirname, 'src/utils'),
     }),
     fixBabelImports('import', {
         libraryName: "antd-mobile", style: true // change importing css to less
