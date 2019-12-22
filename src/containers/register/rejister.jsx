@@ -9,7 +9,6 @@ import {
     InputItem,
     Button,
     Radio,
-    Toast
 } from 'antd-mobile'
 import Logo from 'components/logo/logo'
 import {register} from '../../redux/actions';
@@ -36,14 +35,9 @@ class Rejister extends Component {
         })
     }
 
+
     register = () => {
         this.props.register(this.state);
-        setTimeout(()=>{
-            const {msg} = this.props.user;
-            if (msg) {
-                Toast.fail(msg);
-            }
-        },0)
     }
 
     render() {

@@ -7,8 +7,7 @@ import {
     WhiteSpace,
     List,
     InputItem,
-    Button,
-    Toast
+    Button
 } from 'antd-mobile'
 import Logo from 'components/logo/logo'
 import {login} from "../../redux/actions";
@@ -33,12 +32,6 @@ class Login extends Component {
 
     login = () => {
         this.props.login(this.state);
-        setTimeout(()=>{
-            const {msg} = this.props.user;
-            if (msg) {
-                Toast.fail(msg);
-            }
-        },0)
     }
 
     render() {
