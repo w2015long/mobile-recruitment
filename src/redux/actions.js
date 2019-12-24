@@ -86,4 +86,18 @@ export const updateUser = user => {
     }
 }
 
+//获取用户信息
+export const getUserInfo = () => {
+    return async dispatch => {
+        const ret = await reqUser();
+        if (ret.code === 0) {//成功
+            dispatch(receiveUser(ret.data));
+        } else {
+            dispatch(restUser(ret.msg));
+        }
+
+    }
+
+}
+
 

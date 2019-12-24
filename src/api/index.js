@@ -9,3 +9,6 @@ export const reqRegister = (user) => ajax({url:'/register',data:user,method:"pos
 //更新用户
 export const reqUpdateUser = user => ajax({url:'update',data:user,method:'post'});
 
+// 获取用户信息
+export const reqUser = () => ajax('/user')
+
