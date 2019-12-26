@@ -10,6 +10,7 @@ import {
     reqLogin,
     reqRegister,
     reqUpdateUser,
+    reqUser
 } from 'api';
 
 //授权登录action

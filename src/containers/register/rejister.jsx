@@ -12,7 +12,6 @@ import {
 } from 'antd-mobile'
 import Logo from 'components/logo/logo'
 import {register} from '../../redux/actions';
-import './register.less'
 
 const ListItem = List.Item;
 
