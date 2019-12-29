@@ -1,4 +1,7 @@
 import React, {Component} from 'react';
+import {connect} from 'react-redux'
+import UserList from 'components/user-list/user-list'
+import {getUserList} from '../../redux/actions'
 
 class Manito extends Component {
     constructor(props) {
@@ -6,13 +9,18 @@ class Manito extends Component {
         this.state = {}
     }
 
-    render() {
-        return (
-            <div>
-                Manito
-            </div>
-        )
+    componentDidMount() {
+        this.props.getUserList('boss');
     }
+
+    render() {
+        const {userList} = this.props.UserList
+        return <UserList userList = {userList}/>
+    }
+
 }
 
-export default Manito;
+export default connect(
+    state => ({UserList:state.UserList}),
+    {getUserList}
+)(Manito);

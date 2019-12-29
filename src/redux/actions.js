@@ -4,13 +4,15 @@ import {
     ERROR_MSG,
     RECEIVE_USER,
     REST_USER,
+    RECEIVE_USER_LIST,
 } from "./action-types";
 
 import {
     reqLogin,
     reqRegister,
     reqUpdateUser,
-    reqUser
+    reqUser,
+    reqUserList
 } from 'api';
 
 //授权登录action
@@ -22,7 +24,9 @@ const errorMsg = msg => ({type:ERROR_MSG,payload:msg});
 const receiveUser = user => ({type:RECEIVE_USER,payload:user});
 
 //提交表单成功 重置用户信息
-const restUser = user => ({type:REST_USER,payload:user});
+export const resetUser = user => ({type:REST_USER,payload:user});
+
+const receiveUserList = userList => ({type:RECEIVE_USER_LIST,payload:userList})
 
 //注册
 export const register = user => {
@@ -81,7 +85,7 @@ export const updateUser = user => {
         if (ret.code === 0) {//成功
             dispatch(receiveUser(ret.data));
         } else {
-            dispatch(restUser(ret.msg));
+            dispatch(resetUser(ret.msg));
         }
 
     }
@@ -94,11 +98,21 @@ export const getUserInfo = () => {
         if (ret.code === 0) {//成功
             dispatch(receiveUser(ret.data));
         } else {
-            dispatch(restUser(ret.msg));
+            dispatch(resetUser(ret.msg));
         }
 
     }
 
+}
+
+//获取用户列表
+export const getUserList = type => {
+    return async dispatch => {
+        const ret = await reqUserList(type);
+        if (ret.code === 0) {//成功
+            dispatch(receiveUserList(ret.data));
+        }
+    }
 }
 
 

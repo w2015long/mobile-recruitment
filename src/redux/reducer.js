@@ -5,6 +5,7 @@ import {
     ERROR_MSG,
     RECEIVE_USER,
     REST_USER,
+    RECEIVE_USER_LIST,
 } from "./action-types";
 
 import {getRedirectTo} from 'utils'
@@ -37,8 +38,23 @@ function User(state = initUser,action) {
     }
 }
 
+const initUserList = {
+    userList:[]
+}
+
+function UserList(state = initUserList,action) {
+    switch (action.type) {
+        case RECEIVE_USER_LIST:
+            return {...state,userList:action.payload};
+            break;
+        default:
+            return state
+    }
+}
+
 
 
 export default combineReducers({
     User,
+    UserList
 })
