@@ -14,3 +14,9 @@ export const reqUser = () => ajax({url:'/user'});
 
 // 获取用户列表信息
 export const reqUserList = (type) => ajax({url:'/userlist',data:{type}});
+
+//获取回话列表
+export const reqSessionList = () => ajax({url:'/msglist'});
+
+//修改已读
+export const reqReadMsg = (from) => ajax({url:'/readmsg',data:{from},method:'post'});

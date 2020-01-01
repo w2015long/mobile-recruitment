@@ -54,10 +54,10 @@ class ManitoInfo extends Component {
                     <InputItem
                         placeholder='请输入求职岗位'
                         onChange={val => {this.handleChange('post', val)}}
-                    >招聘职位:</InputItem>
+                    >求职岗位:</InputItem>
                     <WhiteSpace />
                     <TextareaItem
-                        title="职位要求:"
+                        title="个人介绍:"
                         placeholder='请输入个人介绍'
                         rows={3}
                         onChange={val => {this.handleChange('info', val)}}

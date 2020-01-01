@@ -6,6 +6,8 @@ import {
     RECEIVE_USER,
     REST_USER,
     RECEIVE_USER_LIST,
+    RECEIVE_SESSION_LIST,
+    RECEIVE_MESSAGE
 } from "./action-types";
 
 import {getRedirectTo} from 'utils'
@@ -53,8 +55,29 @@ function UserList(state = initUserList,action) {
 }
 
 
+const initChat = {
+    users:{},// 所有用户信息的对象  属性名: userid, 属性值是: {username, header}
+    chatMsgs:[],// sessionList当前用户所有相关msg的数组
+    unreadCount:0
+}
+
+function Chat(state = initChat, action) {
+    switch (action.type) {
+        case RECEIVE_SESSION_LIST:
+            return Object.assign({},state,action.payload);
+            break;
+        case RECEIVE_MESSAGE:
+            const {chatMsg} = action.payload;
+            return {...state,chatMsgs:[...state.chatMsgs,chatMsg]};
+            break;
+        default:
+            return state
+    }
+}
+
 
 export default combineReducers({
     User,
-    UserList
+    UserList,
+    Chat
 })

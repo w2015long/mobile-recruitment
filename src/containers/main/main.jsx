@@ -12,6 +12,7 @@ import Message from '../message/message'
 import Profile from '../profile/profile'
 import NoFound from 'components/not-found/not-found'
 import TabBar from 'components/tabbar/tabbar'
+import Chat from '../chat/chat'
 
 import {getRedirectTo} from "../../utils";
 import {getUserInfo} from '../../redux/actions'
@@ -87,7 +88,7 @@ class Main extends Component {
             this.navList[0].hidden = true
         }
 
-        const currentNav = this.navList.find(nav => nav.path == path);
+        const currentNav = this.navList.find(nav => nav.path === path);
 
         const footNav = this.navList.filter(nav => !nav.hidden);
 
@@ -100,6 +101,7 @@ class Main extends Component {
                     }
                     <Route path="/bossinfo" component={BossInfo}/>
                     <Route path="/manitoinfo" component={ManitoInfo}/>
+                    <Route path="/chat/:targetId" component={Chat}/>
                     <Route component={NoFound}/>
                 </Switch>
                 {currentNav ? <TabBar navList = {footNav} /> : null}

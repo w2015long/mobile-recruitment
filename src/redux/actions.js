@@ -1,10 +1,13 @@
 import {Toast} from 'antd-mobile'
+import io from 'socket.io-client'
 import {
     AUTH_SUCCESS,
     ERROR_MSG,
     RECEIVE_USER,
     REST_USER,
     RECEIVE_USER_LIST,
+    RECEIVE_SESSION_LIST,
+    RECEIVE_MESSAGE
 } from "./action-types";
 
 import {
@@ -12,8 +15,36 @@ import {
     reqRegister,
     reqUpdateUser,
     reqUser,
-    reqUserList
+    reqUserList,
+    reqSessionList,
 } from 'api';
+
+function initIo(dispatch, userid) {
+    if (!io.socket) {
+        // 连接服务器, 得到与服务器的连接对象
+        io.socket = io('ws://localhost:4000')  // 2. 创建对象之后: 保存对象
+        io.socket.on('receiveMsg',(chatMsg)=>{
+            console.log('客户端接收服务器发送的消息', chatMsg);
+            // 只有当chatMsg是与当前用户相关的消息, 才去分发同步action保存消息
+            if(userid===chatMsg.from || userid===chatMsg.to) {
+                dispatch(receiveMsg(chatMsg, userid))
+            }
+
+        })
+    }
+}
+
+async function getSessionList(dispatch,userid) {
+    initIo(dispatch,userid);
+    const ret = await reqSessionList();
+    if (ret.code===0) {//成功
+        const {users, chatMsgs} = ret.data
+        dispatch(receiveSessionList({users, chatMsgs,userid}));
+    } else {
+        Toast.fail(ret.msg)
+    }
+
+}
 
 //授权登录action
 const authSuccess = user => ({type:AUTH_SUCCESS,payload:user});
@@ -27,6 +58,13 @@ const receiveUser = user => ({type:RECEIVE_USER,payload:user});
 export const resetUser = user => ({type:REST_USER,payload:user});
 
 const receiveUserList = userList => ({type:RECEIVE_USER_LIST,payload:userList})
+
+//接收会话列表
+const receiveSessionList = ({users, chatMsgs, userid}) => ({type:RECEIVE_SESSION_LIST,payload:{users, chatMsgs, userid}})
+
+//客服端接收服务器发送的消息
+const receiveMsg = (chatMsg, userid) => ({type:RECEIVE_MESSAGE,payload:{chatMsg, userid}});
+
 
 //注册
 export const register = user => {
@@ -46,6 +84,7 @@ export const register = user => {
     return async dispatch => {
         const ret = await reqRegister(user);
         if (ret.code===0) {//成功
+            getSessionList(dispatch,ret.data._id);
             dispatch(authSuccess(ret.data));
         } else {
             Toast.fail(ret.msg)
@@ -70,6 +109,7 @@ export const login = user => {
     return async dispatch => {
         const ret = await reqLogin(username,password);
         if (ret.code===0) {//成功
+            getSessionList(dispatch,ret.data._id);
             dispatch(authSuccess(ret.data));
         } else {
             Toast.fail(ret.msg);
@@ -96,6 +136,7 @@ export const getUserInfo = () => {
     return async dispatch => {
         const ret = await reqUser();
         if (ret.code === 0) {//成功
+            getSessionList(dispatch,ret.data._id);
             dispatch(receiveUser(ret.data));
         } else {
             dispatch(resetUser(ret.msg));
@@ -114,5 +155,16 @@ export const getUserList = type => {
         }
     }
 }
+
+//send消息
+export const sendMsg = ({from,to,content}) => {
+    return dispatch => {
+        console.log('客户端向服务器发送消息', {from, to, content})
+        // 发消息
+        io.socket.emit('sendMsg', {from, to, content})
+    }
+
+}
+
 
 
