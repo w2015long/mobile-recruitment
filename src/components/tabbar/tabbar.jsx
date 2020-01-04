@@ -6,13 +6,14 @@ import {withRouter} from 'react-router-dom'
 class FootNav extends Component {
 
     render() {
-        const {navList} = this.props;
+        const {navList,unreadCount} = this.props;
         const path = this.props.location.pathname;
 
         return (
             <TabBar>
                 {navList.map(nav => <TabBar.Item
                     key={nav.path}
+                    badge={ nav.path === '/message' && unreadCount}
                     title={nav.text}
                     icon={{uri: require(`./images/${nav.icon}.png`)}}
                     selectedIcon={{uri: require(`./images/${nav.icon}-selected.png`)}}
@@ -27,6 +28,7 @@ class FootNav extends Component {
 
 FootNav.propTypes = {
     navList:PropTypes.array.isRequired,
+    unreadCount:PropTypes.number.isRequired
 }
 
 export default withRouter(FootNav)

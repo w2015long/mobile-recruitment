@@ -19,7 +19,7 @@ class Message extends Component {
         const { user } = this.props;
         const { users, chatMsgs } = this.props.chat;
 
-        const latestMessageList = getLatestMessageList(chatMsgs);
+        const latestMessageList = getLatestMessageList(chatMsgs,user._id);
 
         return (
             <List>
@@ -31,7 +31,7 @@ class Message extends Component {
                         return (
                             <Item
                                 key={msg._id}
-                                extra={<Badge text={1} />}
+                                extra={<Badge text={msg.unreadCount} />}
                                 thumb={targetAvatar}
                                 arrow='horizontal'
                                 onClick={()=>this.props.history.push(`/chat/${targetId}`)}

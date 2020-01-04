@@ -7,7 +7,8 @@ import {
     REST_USER,
     RECEIVE_USER_LIST,
     RECEIVE_SESSION_LIST,
-    RECEIVE_MESSAGE
+    RECEIVE_MESSAGE,
+    READ_MESSAGE
 } from "./action-types";
 
 import {
@@ -18,6 +19,7 @@ import {
     reqUserList,
     reqSessionList,
 } from 'api';
+import {reqReadMsg} from "../api";
 
 function initIo(dispatch, userid) {
     if (!io.socket) {
@@ -39,7 +41,13 @@ async function getSessionList(dispatch,userid) {
     const ret = await reqSessionList();
     if (ret.code===0) {//成功
         const {users, chatMsgs} = ret.data
-        dispatch(receiveSessionList({users, chatMsgs,userid}));
+        const unreadCount = chatMsgs.reduce((preTotal,msg)=>{
+            if (!msg.read && msg.to === userid) {
+                preTotal++
+            }
+            return preTotal
+        },0)
+        dispatch(receiveSessionList({users, chatMsgs,unreadCount}));
     } else {
         Toast.fail(ret.msg)
     }
@@ -60,10 +68,13 @@ export const resetUser = user => ({type:REST_USER,payload:user});
 const receiveUserList = userList => ({type:RECEIVE_USER_LIST,payload:userList})
 
 //接收会话列表
-const receiveSessionList = ({users, chatMsgs, userid}) => ({type:RECEIVE_SESSION_LIST,payload:{users, chatMsgs, userid}})
+const receiveSessionList = ({users, chatMsgs, unreadCount}) => ({type:RECEIVE_SESSION_LIST,payload:{users, chatMsgs, unreadCount}})
 
 //客服端接收服务器发送的消息
 const receiveMsg = (chatMsg, userid) => ({type:RECEIVE_MESSAGE,payload:{chatMsg, userid}});
+
+//更新已读状态
+const readMessage = ({from,to,count}) => ({type:READ_MESSAGE,payload:{from,to,count}})
 
 
 //注册
@@ -164,6 +175,16 @@ export const sendMsg = ({from,to,content}) => {
         io.socket.emit('sendMsg', {from, to, content})
     }
 
+}
+
+//read message
+export const readMsg = (sendId,targetId) => {
+    return async dispatch => {
+        const ret = await reqReadMsg(targetId);
+        if (ret.code === 0) {//成功
+            dispatch(readMessage({from:sendId,to:targetId,count:ret.data}));
+        }
+    }
 }
 
 

@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import {NavBar, List, InputItem, Grid, Icon} from 'antd-mobile'
 import {connect} from 'react-redux'
-import {sendMsg} from '../../redux/actions'
+import {sendMsg,readMsg} from '../../redux/actions'
 
 const Item = List.Item
 
@@ -23,9 +23,12 @@ class Chat extends Component {
 
     }
 
+
     static getDerivedStateFromProps(props, state) {
         const targetId = props.match.params.targetId;
         const sendId = props.user._id;
+
+
         return {targetId,sendId}
     }
 
@@ -35,6 +38,12 @@ class Chat extends Component {
 
     componentDidUpdate(prevProps, prevState, snapshot) {
         window.scrollTo(0,document.body.scrollHeight)
+    }
+
+    componentWillUnmount() {
+        //退出当前组件 更新读取消息数
+        const {sendId,targetId} = this.state
+        this.props.readMsg(sendId,targetId)
     }
 
 
@@ -122,5 +131,5 @@ class Chat extends Component {
 
 export default connect(
     state => ({user:state.User,chat:state.Chat}),
-    {sendMsg}
+    {sendMsg,readMsg}
 )(Chat);

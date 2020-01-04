@@ -13,18 +13,25 @@ function getRedirectTo(type,header) {
     return path
 }
 
-const getLatestMessageList = msgList => {
+const getLatestMessageList = (msgList,userid) => {
     let latestMessages = {}
     msgList.forEach(msg =>{
+
+        //每一条消息存储一个未读字段
+        msg.unreadCount = !msg.read && msg.to===userid ? 1 : 0;
+
         const chatId = msg.chat_id
         let latestMsg = latestMessages[chatId];
         if (!latestMsg) {//没有存储最新消息
             latestMessages[chatId] = msg
-        } else {//之前有做存储最新消息
+        } else {//之前有做存储这个会话关系(chatId)
+            const {unreadCount} = latestMsg;
             //更新为最新消息
             if (latestMsg.create_time < msg.create_time) {
                 latestMessages[chatId] = msg
             }
+            //累加这条会话 的未读数
+            latestMessages[chatId].unreadCount = msg.unreadCount + unreadCount
         }
     });
 

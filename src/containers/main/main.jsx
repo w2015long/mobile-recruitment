@@ -56,7 +56,7 @@ class Main extends Component {
 
     componentDidMount() {
         const userid = Cookies.get('userid');
-        const {user} = this.props;
+        const {user,chat} = this.props;
         if (userid && !user._id) {
             this.props.getUserInfo()
         }
@@ -66,7 +66,7 @@ class Main extends Component {
         // 读取cookie中的userid
         const userid = Cookies.get('userid');
         let path = this.props.location.pathname;
-        const {user} = this.props
+        const {user,chat} = this.props
         // 如果没有, 自动重定向到登陆界面
         if(!userid) {
             return <Redirect to='/login'/>
@@ -104,13 +104,13 @@ class Main extends Component {
                     <Route path="/chat/:targetId" component={Chat}/>
                     <Route component={NoFound}/>
                 </Switch>
-                {currentNav ? <TabBar navList = {footNav} /> : null}
+                {currentNav ? <TabBar navList = {footNav} unreadCount={chat.unreadCount} /> : null}
             </div>
         )
     }
 }
 
 export default connect(
-    state => ({user:state.User}),
+    state => ({user:state.User,chat:state.Chat}),
     {getUserInfo}
 )(Main);
