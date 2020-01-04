@@ -29,6 +29,14 @@ class Chat extends Component {
         return {targetId,sendId}
     }
 
+    componentDidMount() {
+        window.scrollTo(0,document.body.scrollHeight)
+    }
+
+    componentDidUpdate(prevProps, prevState, snapshot) {
+        window.scrollTo(0,document.body.scrollHeight)
+    }
+
 
     sendMessage = () => {
         //收集数据
@@ -40,7 +48,7 @@ class Chat extends Component {
         if(content) {
             this.props.sendMsg({from, to, content})
         }
-        this.setState({content:''})
+        this.setState({content:'',isShowEmoji:false})
     }
 
     toggleShow = () => {
