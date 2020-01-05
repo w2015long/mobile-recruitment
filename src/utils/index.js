@@ -15,6 +15,7 @@ function getRedirectTo(type,header) {
 
 const getLatestMessageList = (msgList,userid) => {
     let latestMessages = {}
+    console.log("getLatestMessageList>>>>>>>");
     msgList.forEach(msg =>{
 
         //每一条消息存储一个未读字段

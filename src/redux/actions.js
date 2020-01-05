@@ -182,7 +182,7 @@ export const readMsg = (sendId,targetId) => {
     return async dispatch => {
         const ret = await reqReadMsg(targetId);
         if (ret.code === 0) {//成功
-            dispatch(readMessage({from:sendId,to:targetId,count:ret.data}));
+            dispatch(readMessage({from:targetId,to:sendId,count:ret.data}));
         }
     }
 }
